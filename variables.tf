@@ -29,8 +29,6 @@ variable "login_name_suffix" {
   default = ""
 }
 
-variable "vault_token" {}
-
 variable "skip_reassign_owned" {
   default = true
 }

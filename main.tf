@@ -26,13 +26,12 @@ resource "vault_database_secret_backend_connection" "this" {
   }
 }
 
-resource "null_resource" "rotate_role_password" {
-  triggers = {
-    password = module.user.this.plaintext_password
-  }
-  provisioner "local-exec" {
-    command = "VAULT_TOKEN=${var.vault_token} vault write -force ${vault_database_secret_backend_connection.this.backend}/rotate-root/${vault_database_secret_backend_connection.this.name}"
-  }
+resource "vault_generic_endpoint" "rotate_root" {
+  path                 = "${vault_database_secret_backend_connection.this.backend}/rotate-root/${vault_database_secret_backend_connection.this.name}"
+  ignore_absent_fields = true
+  disable_read         = true
+  disable_delete       = true
+  data_json            = "{}"
   depends_on = [
     vault_database_secret_backend_connection.this
   ]
